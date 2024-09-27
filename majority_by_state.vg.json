@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "data": { "url": "./results_parlimen_ge15.csv" },
+    "data": { "url": "https://raw.githubusercontent.com/itsgeegeez/fit3179-week10/main/results_parlimen_ge15.csv" },
     "transform": [
         {
             "aggregate": [
@@ -20,112 +20,42 @@
                 }
             ],
             "sort": [{ "field": "average_majoriti", "order": "descending" }]
-        },
-        {
-            "window": [
-                {
-                    "op": "median",
-                    "field": "average_majoriti",
-                    "as": "median_majoriti"
-                }
-            ]
-        },
-        {
-            "calculate": "datum.average_majoriti == datum.median_majoriti",
-            "as": "is_median"
         }
     ],
+    "width": "container",
+    "background": "transparent",
+    "height": "container",
+    "autosize": "fit",
     "title": {
-        "text": "Average Majority by State"
+        "text": "Average Majority Votes by State"
     },
     "layer": [
         {
             "mark": "rect",
             "encoding": {
                 "y": { "field": "state", "type": "nominal", "sort": "-x", "title": "State" },
-                "x": { "field": "average_majoriti", "type": "quantitative", "title": "Average Majority" },
+                "x": { "field": "average_majoriti", "type": "quantitative", "title": "Average Majority Votes" },
                 "color": {
                     "field": "average_majoriti",
                     "type": "quantitative",
-                    "scale": { "scheme": "yelloworangered" },
-                    "legend": { "title": "Average majority" }
+                    "scale": { "scheme": "viridis" },
+                    "legend": { "title": "Votes" }
                 },
                 "tooltip": [
                     { "field": "state", "type": "nominal", "title": "State" },
                     {
                         "field": "average_majoriti",
                         "type": "quantitative",
-                        "format": ".2f",
-                        "title": "Average Majority"
+                        "format": ",.0f",
+                        "title": "Average Majority Votes",
+                        "formatType": "number"
                     }
                 ]
-            }
-        },
-        {
-            "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "middle",
-                "dx": 5,
-                "fontSize": 12,
-                "fontWeight": "bold"
-            },
-            "encoding": {
-                "y": { "field": "state", "type": "nominal", "sort": "-x" },
-                "x": { "field": "average_majoriti", "type": "quantitative" },
-                "text": {
-                    "condition": {
-                        "test": "datum.is_median",
-                        "field": "state",
-                        "type": "nominal"
-                    }
-                },
-                "color": {
-                    "condition": {
-                        "test": "datum.is_median",
-                        "value": "black"
-                    },
-                    "value": "transparent"
-                }
-            }
-        },
-        {
-            "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "middle",
-                "dx": 5,
-                "dy": 20,
-                "fontSize": 12
-            },
-            "encoding": {
-                "y": { "field": "state", "type": "nominal", "sort": "-x" },
-                "x": { "field": "average_majoriti", "type": "quantitative" },
-                "text": {
-                    "condition": {
-                        "test": "datum.is_median",
-                        "field": "average_majoriti",
-                        "type": "quantitative",
-                        "format": ".2f"
-                    }
-                },
-                "color": {
-                    "condition": {
-                        "test": "datum.is_median",
-                        "value": "black"
-                    },
-                    "value": "transparent"
-                }
             }
         }
     ],
     "config": {
-        "view": { "stroke": "transparent" },
-        "axis": { "grid": true, "tickBand": "extent" },
-        "style": {
-            "text": {
-                "font": "Arial"
-            }
-        }
+        "view": { "stroke": null },
+        "axis": { "grid": false }
     }
 }

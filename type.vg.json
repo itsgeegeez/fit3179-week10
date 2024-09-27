@@ -1249,41 +1249,23 @@
         { "filter": "datum.dun == dun_selection" },
         {
             "fold": [
-                "male_18_20",
-                "male_21_29",
-                "male_30_39",
-                "male_40_49",
-                "male_50_59",
-                "male_60_69",
-                "male_70_79",
-                "male_80_89",
-                "male_90+",
-                "female_18_20",
-                "female_21_29",
-                "female_30_39",
-                "female_40_49",
-                "female_50_59",
-                "female_60_69",
-                "female_70_79",
-                "female_80_89",
-                "female_90+"
+                "votertype_regular",
+                "votertype_early_army",
+                "votertype_early_police",
+                "votertype_postal_overseas"
             ],
-            "as": ["age_gender", "value"]
+            "as": ["votertype", "value"]
         },
         {
-            "calculate": "split(datum.age_gender, '_')[0] == 'male' ? 'Male' : 'Female'",
-            "as": "gender"
-        },
-        {
-            "calculate": "split(datum.age_gender, '_')[1] == '90+' ? '90+' : split(datum.age_gender, '_')[1] + '-' + (parseInt(split(datum.age_gender, '_')[2]))",
-            "as": "age_group"
+            "calculate": "indexof(datum.votertype, 'regular') > -1 ? 'Regular' : indexof(datum.votertype, 'early_army') > -1 ? 'Early Army' : indexof(datum.votertype, 'early_police') > -1 ? 'Early Police' : 'Postal Overseas'",
+            "as": "votertype"
         }
     ],
 
     "title": {
-        "text": "Constituency Voters by Age Group and Gender",
+        "text": "Constituency Voters by Type",
         "font": "Arial",
-        "subtitle": "Highlight a gender to see the distribution of voters by age group"
+        "subtitle": "Highlight a voter type to see the distribution of voters by voter type"
     },
 
     "layer": [
@@ -1294,41 +1276,38 @@
             },
             "params": [
                 {
-                    "name": "gender_selection",
+                    "name": "type_selection",
                     "select": {
                         "type": "point",
-                        "fields": ["gender"]
+                        "fields": ["votertype"]
                     },
                     "bind": "legend"
                 }
             ],
             "encoding": {
                 "x": {
-                    "field": "age_group",
+                    "field": "votertype",
                     "type": "ordinal",
-                    "title": "Age Group",
+                    "title": "Voter Type",
                     "axis": { "labelAngle": -45 }
                 },
                 "y": {
                     "field": "value",
                     "type": "quantitative",
-                    "title": "Number of Voters",
-                    "stack": "normalize"
+                    "title": "Number of Voters"
                 },
                 "color": {
-                    "field": "gender",
-                    "title": "Gender",
-                    "type": "nominal",
-                    "scale": { "domain": ["Male", "Female"], "range": ["steelblue", "pink"] }
+                    "field": "votertype",
+                    "title": "Voter Type",
+                    "type": "nominal"
                 },
                 "opacity": {
-                    "condition": { "param": "gender_selection", "value": 1 },
+                    "condition": { "param": "type_selection", "value": 1 },
                     "value": 0.2
                 },
                 "tooltip": [
                     { "field": "dun", "type": "nominal", "title": "Constituency" },
-                    { "field": "age_group", "type": "ordinal", "title": "Age Group" },
-                    { "field": "gender", "type": "nominal", "title": "Gender" },
+                    { "field": "votertype", "type": "nominal", "title": "Voter Type" },
                     { "field": "value", "type": "quantitative", "title": "Number of Voters", "format": ",.0f" }
                 ]
             }
